@@ -410,7 +410,7 @@
   }
 
   // --- Validation & submit ---
-  const WEBHOOK = 'https://script.google.com/macros/s/AKfycbzDWkoLRkARtK5_ofTX_2aRxgpF31h5lRX3ESdRJoOhnDR2qdT9reMLxV8HhL-mVSw1/exec';
+  const WEBHOOK = 'https://script.google.com/macros/s/AKfycbxB67xp3J5XqeCu1UuUPq9vvwiMg2lx8r_C0VXwyOi7XIugTVG1hOd9CYMflFFkBaeK/exec';
 
   function submitForm() {
     let valid = true;
@@ -459,12 +459,12 @@
     if (otroTexto) musicaSel.push(otroTexto);
     const musica = musicaSel.join(', ');
 
-    // Send to Google Sheets
-    fetch(WEBHOOK, {
-      method: 'POST',
-      body: JSON.stringify({ proyecto, contacto, reto, musica }),
-      headers: { 'Content-Type': 'application/json' }
-    }).catch(() => {}); // silent fail — form still shows confirmation
+    // Send to Google Sheets via GET to avoid CORS
+    const params = new URLSearchParams({ proyecto, contacto, reto, musica });
+    fetch(WEBHOOK + '?' + params.toString(), {
+      method: 'GET',
+      mode: 'no-cors'
+    }).catch(() => {});
 
     // Show confirmation
     document.getElementById('formContainer').style.display = 'none';
