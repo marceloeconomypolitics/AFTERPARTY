@@ -266,7 +266,7 @@
   }
 </style>
 </head>
-<body>
+<body onload="checkAlreadyRegistered()">
 <div class="wrapper">
 
   <!-- HEADER IMAGE -->
@@ -359,14 +359,14 @@
 
 <script>
   // --- Check if already submitted ---
-  window.addEventListener('DOMContentLoaded', function() {
+  function checkAlreadyRegistered() {
     if (localStorage.getItem('afterparty_registered')) {
       document.getElementById('formContainer').style.display = 'none';
       const conf = document.getElementById('confirmation');
       conf.classList.add('visible');
       drawDecorativeQR(document.getElementById('qrCanvas'));
     }
-  });
+  }
 
   // --- QR Generator (pure JS, no lib needed for decorative QR) ---
   function drawDecorativeQR(canvas) {
