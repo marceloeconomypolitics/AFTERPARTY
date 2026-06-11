@@ -410,6 +410,8 @@
   }
 
   // --- Validation & submit ---
+  const WEBHOOK = 'https://script.google.com/macros/s/AKfycbzDWkoLRkARtK5_ofTX_2aRxgpF31h5lRX3ESdRJoOhnDR2qdT9reMLxV8HhL-mVSw1/exec';
+
   function submitForm() {
     let valid = true;
 
@@ -446,6 +448,23 @@
     }
 
     if (!valid) return;
+
+    // Collect data
+    const proyecto = document.querySelector('input[name="proyecto"]:checked').value;
+    const contacto = document.getElementById('contacto') ? document.getElementById('contacto').value.trim() : '';
+    const reto = document.getElementById('reto') ? document.getElementById('reto').value.trim() : '';
+    const musicaSel = Array.from(document.querySelectorAll('#musica-group input[type="checkbox"]:checked'))
+                          .map(cb => cb.value);
+    const otroTexto = document.getElementById('otroTexto').value.trim();
+    if (otroTexto) musicaSel.push(otroTexto);
+    const musica = musicaSel.join(', ');
+
+    // Send to Google Sheets
+    fetch(WEBHOOK, {
+      method: 'POST',
+      body: JSON.stringify({ proyecto, contacto, reto, musica }),
+      headers: { 'Content-Type': 'application/json' }
+    }).catch(() => {}); // silent fail — form still shows confirmation
 
     // Show confirmation
     document.getElementById('formContainer').style.display = 'none';
